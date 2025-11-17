@@ -20,7 +20,7 @@ TurnAround time
   puts(""); 
  
   // Masukkan data yang diproses 
-  for(i=0; i<n; i++){ 
+  for(i = 0; i < n; i++){ 
     fflush(stdin); 
  
     printf(Nama Proses\t= "); scanf(“%s”, &name[i]); 
@@ -30,9 +30,9 @@ TurnAround time
   } 
  
   // Urutkan Data 
-  for(i=0; i<n; i++){ 
-    for(j=i+1; j<n; j++) 
-      if(AT[i]>AT[j]){ 
+  for(i = 0; i < n; i++){ 
+    for(j = i + 1; j < n; j++) 
+      if(AT[i] > AT[j]){ 
         //tukar nama 
         strcpy(tmpName, name[i]); 
         strcpy(name[i], name[j]); 
