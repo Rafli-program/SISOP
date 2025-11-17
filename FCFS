@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <string.h>
+
+// Fungsi main harus mengembalikan int
+int main()
+{
+    // n = banyak proses, AT = Arrival Time, WT = Waiting Time, TAT = TurnAround Time
+    // b = burst time, TotWT = Total Waiting Time, TotTA = Total TurnAround time
+    // name = nama proses, AvWT = Average Waiting Time, AvTA = Average TurnAround time
+    
+    // Variabel time menyimpan waktu selesai/mulai dari setiap proses untuk Gantt Chart
+    int n, AT[100], b[100], i, j, tmp, WT[100], TAT[100], time[101]; 
+    int TotWT = 0, TotTA = 0;
+    float AvWT, AvTA;
+    char name[100][20]; // Perbaiki ukuran array: maks 100 proses, nama maks 19 karakter
+    char tmpName[20];
+    
+    printf("\n\t Algoritma CPU Scheduling FCFS \n");
+    printf("======================================\n");
+
+    printf("Jumlah Proses\t= "); 
+    // Pastikan n tidak melebihi batas array
+    if (scanf("%d", &n) != 1 || n <= 0 || n > 100) {
+        printf("Input jumlah proses tidak valid.\n");
+        return 1;
+    }
+    puts("");
+    
+    // --- Masukkan data yang diproses ---
+    for(i = 0; i < n; i++){
+        // Penggunaan fflush(stdin) umumnya tidak disarankan. 
+        // Lebih baik membersihkan buffer dengan loop while jika diperlukan, 
+        // tetapi untuk input ini mungkin tidak terlalu krusial jika format input benar.
+        
+        printf("Nama Proses P%d\t= ", i + 1); 
+        // Perbaikan: Hapus & pada scanf untuk string
+        if (scanf("%s", name[i]) != 1) {
+             printf("Input nama proses tidak valid.\n");
+             return 1;
+        }
+        
+        printf("Arrival time\t= "); 
+        // Perbaikan: Mengganti tanda baca kurung kurawal (" menjadi ")
+        if (scanf("%d", &AT[i]) != 1) {
+             printf("Input arrival time tidak valid.\n");
+             return 1;
+        }
+        
+        printf("Burst time\t= "); 
+        if (scanf("%d", &b[i]) != 1) {
+             printf("Input burst time tidak valid.\n");
+             return 1;
+        }
+        puts("");
+    }
+    
+    // --- Urutkan Data berdasarkan Arrival Time (FCFS) ---
+    // Algoritma FCFS mengharuskan proses diurutkan berdasarkan Arrival Time.
+    for(i = 0; i < n; i++){
+        for(j = i + 1; j < n; j++) {
+            if(AT[i] > AT[j]){
+                // Tukar nama
+                strcpy(tmpName, name[i]);
+                strcpy(name[i], name[j]);
+                strcpy(name[j], tmpName);
+                
+                // Tukar arrival time
+                tmp = AT[i];
+                AT[i] = AT[j];
+                AT[j] = tmp;
+                
+                // Tukar burst
+                tmp = b[i];
+                b[i] = b[j];
+                b[j] = tmp;
+            }
+        }
+    }
+    
+    // Inisialisasi time[0] dengan Arrival Time proses pertama yang sudah diurutkan.
+    // Ini adalah waktu CPU mulai bekerja.
+    time[0] = AT[0];
+    
+    puts("\n\t Tabel Proses (Terurut FCFS)");
+    puts("==========================================");
+    printf("| no | proses\t | time arrival\t | burst |\n");
+    puts("------------------------------------------"); // Perbaikan: karakter garis
+    
+    // --- Hitung WT, TAT, dan Time ---
+    for (i = 0; i < n; i++){
+        // Waktu mulai proses ke-i adalah maksimum dari (Waktu selesai proses sebelumnya) dan (Arrival Time proses ke-i)
+        // time[i] menyimpan waktu mulai eksekusi proses ke-i
+        // time[0] sudah diinisialisasi
+        if (i > 0) {
+            // Waktu mulai proses saat ini adalah waktu selesai proses sebelumnya, 
+            // ATAU Arrival Time proses saat ini, mana yang lebih besar.
+            // time[i] = (time[i-1] + b[i-1] > AT[i]) ? time[i-1] + b[i-1] : AT[i]; 
+            // Karena sudah diurutkan berdasarkan AT, logika sederhana ini bisa dipertahankan:
+            // Waktu selesai proses sebelumnya adalah time[i].
+            // Jika proses baru tiba lebih lambat, CPU menunggu.
+            if (time[i-1] + b[i-1] > AT[i]) {
+                time[i] = time[i-1] + b[i-1];
+            } else {
+                time[i] = AT[i];
+            }
+        }
+        
+        printf("| %2d | %s\t | \t%d\t | %d\t |\n", i + 1, name[i], AT[i], b[i]);
+        
+        // Perhitungan time pada gant chart: waktu selesai eksekusi proses ke-i
+        time[i+1] = time[i] + b[i]; 
+        
+        // Waiting Time = Waktu Mulai Eksekusi - Arrival Time
+        WT[i] = time[i] - AT[i]; 
+        
+        // Turnaround Time = Waktu Selesai Eksekusi - Arrival Time
+        TAT[i] = time[i+1] - AT[i]; 
+        
+        TotWT += WT[i];
+        TotTA += TAT[i];
+    }
+    
+    puts("==========================================");
+    
+    printf("\n\tTotal Waiting Time\t= %d \n", TotWT);
+    printf("\tTotal Turn Around Time\t= %d \n", TotTA);
+
+    puts("\n\t Tabel Waktu Proses ");
+    puts("==================================================");
+    printf("| no | proses\t | waiting time\t | turn around\t |\n");
+    puts("--------------------------------------------------"); // Perbaikan: karakter garis
+    
+    for(i = 0; i < n; i++){
+        printf("| %2d | %s\t | \t%d\t | \t%d\t |\n", i + 1, name[i], WT[i], TAT[i]);
+    }
+    
+    puts("==================================================");
+    
+    // --- Gantt Chart ---
+    puts("\n");
+    puts("\t Gant-Chart ");
+    
+
+    // Cetak label proses di bagian atas
+    for(i = 0; i < n; i++){
+        // Sesuaikan lebar agar proses dan garis sejajar
+        printf("| %-8s", name[i]); // -8s: rata kiri dengan lebar 8
+    }
+    printf("|\n");
+
+    // Cetak garis atas dan bawah
+    for(i = 0; i < n; i++){
+        printf("+--------");
+    }
+    printf("+\n");
+    
+    // Cetak Waktu
+    for(i = 0; i <= n; i++){
+        // %-8d: rata kiri dengan lebar 8. Disesuaikan dengan lebar proses di atas.
+        printf("%-8d", time[i]); 
+    }
+    
+    puts("");
+    printf("// Time diperoleh dari waktu selesai eksekusi (penjumlahan Burst Time dari proses sebelumnya, disesuaikan dengan Arrival Time)");
+    
+    puts("\n");
+    
+    // --- Hitung Rata-rata ---
+    AvWT = (float)TotWT / n;
+    AvTA = (float)TotTA / n;
+    
+    printf("\tAverage Waiting Time\t: %.2f\n", AvWT);
+    printf("\tAverage Turn Around Time\t: %.2f\n", AvTA);
+    
+    return 0; // Kembalikan 0 menandakan program berhasil
+}
