@@ -1,11 +1,7 @@
 #include<stdio.h> 
 #include<string.h> 
-main () 
-{ 
-  // n= banyak proses, AT= Arrival Time, WT= Waiting Time, TAT=TurnAround Time 
-  // b= burst time, TotWT= Total Waiting Time, TotTA= Total TurnAround time 
-  // name= nama proses, AvWT= Average Waiting Time, AvTA= Average TurnAround time 
- 
+main() 
+{  
   int n, AT[100], b[100], i, j, tmp, WT[100], TAT[100], time[100]; 
   int TotWT = 0, TotTA = 0; 
   float AvWT, AvTA; 
@@ -20,7 +16,7 @@ main ()
   for(i = 0; i < n; i++){ 
     fflush(stdin); 
  
-    printf(Nama Proses\t= "); scanf(“%s”, &name[i]); 
+    printf("Nama Proses\t= "); scanf(“%s”, &name[i]); 
     printf("Arrival time\t= "); scanf(“%d”, &AT[i]); 
     printf("Burst time\t= "); scanf(“%d”, &b[i]); 
     puts(""); 
@@ -68,13 +64,11 @@ main ()
     printf("\tTurn around time\t= %d \n", TotTA); 
     puts("\n\t Tabel Waktu Proses "); 
     puts("=================================================="); 
-    printf("| no | proses\t | waiting time\t | turn arround\t 
-|\n"); 
+    printf("| no | proses\t | waiting time\t | turn arround\t |\n"); 
     puts("————————————————–"); 
  
     for(i = 0; i < n; i++){ 
-      printf("| %2d | %s\t |  \t%d\t | \t%d\t |\n", i+1, name[i], 
-WT[i], TAT[i]); 
+      printf("| %2d | %s\t |  \t%d\t | \t%d\t |\n", i+1, name[i], WT[i], TAT[i]); 
   } 
  
   puts("=================================================="); 
