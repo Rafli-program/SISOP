@@ -1,13 +1,10 @@
 #include<stdio.h> 
 #include<string.h> 
-main() 
+main () 
 { 
-  // n= banyak proses, AT= Arrival Time, WT= Waiting Time, TAT=     
-TurnAround Time 
-  // b= burst time, TotWT= Total Waiting Time, TotTA= Total   
-TurnAround time 
-  // name= nama proses, AvWT= Average Waiting Time, AvTA= Average 
-TurnAround time 
+  // n= banyak proses, AT= Arrival Time, WT= Waiting Time, TAT=TurnAround Time 
+  // b= burst time, TotWT= Total Waiting Time, TotTA= Total TurnAround time 
+  // name= nama proses, AvWT= Average Waiting Time, AvTA= Average TurnAround time 
  
   int n, AT[100], b[100], i, j, tmp, WT[100], TAT[100], time[100]; 
   int TotWT = 0, TotTA = 0; 
@@ -16,7 +13,7 @@ TurnAround time
  
   printf("\t Algoritma CPU Scheduling FCFS \n"); 
   puts(""); 
-  printf("Jumlah Proses\t= "); scanf("%d", &n); 
+  printf(" Jumlah Proses \t = "); scanf("%d", &n); 
   puts(""); 
  
   // Masukkan data yang diproses 
