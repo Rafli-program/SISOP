@@ -1,0 +1,72 @@
+#include <stdio.h> // Perbaikan: Tambahkan <stdio.h> di dalam kurung sudut
+
+int main()
+{
+ int i,j,n,time,remain,flag=0,tq;
+ int TotWT=0,TotTA=0,AT[100],b[100],rt[100];
+ printf("Masukkan jumlah proses : ");
+ scanf("%d",&n);
+ remain=n;
+ 
+ for(i=0; i<n; i++) // Perbaikan: Tambahkan spasi pada loop for
+ {
+  printf("Masukkan Arrival Time dan Burst Time untuk Proses P[%d]:\n",i+1); // Perbaikan: Tambahkan pesan yang jelas
+  printf("Arrival Time: ");
+  scanf("%d",&AT[i]);
+  printf("Burst Time: ");
+  scanf("%d",&b[i]);
+  rt[i]=b[i];
+ }
+ 
+ printf("Masukkan Quantum Time (tq): ");
+ scanf("%d",&tq);
+ 
+ printf("\n\nProses\t|Turnaround Time|Waiting Time\n"); // Perbaikan: Gunakan \t dan | yang benar
+ printf("---------------------------------------\n"); // Perbaikan: Garis pemisah
+ 
+ time=0;
+ i=0;
+ while(remain != 0)
+ {
+  if(rt[i] <= tq && rt[i] > 0)
+  {
+   time+=rt[i];
+   rt[i]=0;
+   flag=1;
+  }
+  else if(rt[i] > 0)
+  {
+   rt[i]-=tq;
+   time+=tq;
+  }
+  
+  if(rt[i]==0 && flag==1)
+  {
+   remain--;
+   // Penulisan printf ini sudah benar berdasarkan struktur kode Anda
+   printf("P[%d]\t|\t%d\t|\t%d\n",i+1,time-AT[i],time-AT[i]-b[i]); 
+   TotWT+=time-AT[i]-b[i];
+   TotTA+=time-AT[i];
+   flag=0;
+  }
+  
+  // Logika untuk berpindah ke proses berikutnya (Round Robin)
+  if(i==n-1)
+  {
+   i=0;
+  }
+  else if(AT[i+1]<=time)
+  {
+   i++;
+  }
+  else
+  {
+   i=0;
+  }
+ }
+ 
+ printf("\nAverage Waiting Time = %f\n",TotWT*1.0/n);
+ printf("Average Turnaround Time = %f\n",TotTA*1.0/n);
+ 
+ return 0;
+}
